@@ -1,0 +1,42 @@
+version: "3"
+
+services:
+  kotlin-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: kotlin-api
+    ports:
+      - "8080:8080"
+    environment:
+      - db_host=db
+      - db_name=kotlin-api-db
+      - username=postgres
+      - password=admin
+      - db_port=5432
+    depends_on:
+      - db
+  db:
+    image: postgres:10-alpine
+    container_name: kotlin-api-db
+    environment:
+      - POSTGRES_DB=kotlin-api-db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin
+    ports:
+      - "5432:5432"
+  portainer:
+    image: portainer/portainer-ce
+    ports:
+      - "9000:9000"
+      - "8000:8000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    deploy:
+      mode: replicated
+      replicas: 1
+
+
+volumes:
+  portainer_data:

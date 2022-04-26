@@ -1,0 +1,20 @@
+spring:
+  flyway:
+    baseline-on-migrate: true
+    create-schemas: true
+    installed-by: nagarro
+    table: kotlin_schema_version
+    repair: true
+    baseline-version: 0
+    locations: classpath:/db/
+  datasource:
+    password: ${password}
+    url: jdbc:postgresql://${db_host}:${db_port}/${db_name}
+    username: ${username}
+    hikari:
+      maximum-pool-size: 30
+      pool-name: kotlin-api-pool
+      connection-init-sql: SELECT 1
+  output:
+    ansi:
+      enabled: ALWAYS
