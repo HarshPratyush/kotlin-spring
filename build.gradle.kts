@@ -5,6 +5,7 @@ plugins {
 	id("io.spring.dependency-management") version "1.0.11.RELEASE"
 	kotlin("jvm") version "1.6.21"
 	kotlin("plugin.spring") version "1.6.21"
+	id ("com.github.hierynomus.license") version "0.16.1"
 }
 
 group = "org.nagarro"
@@ -37,4 +38,13 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
+
+license {
+	header = rootProject.file("HEADER")
+	strictCheck = false
+	mapping ("kt" , "JAVADOC_STYLE")
+	mapping("sql","DOUBLEDASHES_STYLE")
+	exclude("*.yml")
+
 }
