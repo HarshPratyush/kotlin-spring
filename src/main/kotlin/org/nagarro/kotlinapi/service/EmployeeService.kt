@@ -18,17 +18,23 @@ package org.nagarro.kotlinapi.service
 
 import org.nagarro.kotlinapi.exceptions.DataNotFound
 import org.nagarro.kotlinapi.model.Employee
+import org.nagarro.kotlinapi.repository.JdbcAddressRepository
 import org.nagarro.kotlinapi.repository.JdbcEmployeeRepository
 import org.springframework.stereotype.Service
 
 @Service
-class EmployeeService(private val jdbcEmployeeRepository: JdbcEmployeeRepository){
+class EmployeeService(private val jdbcEmployeeRepository: JdbcEmployeeRepository,private  val jdbcAddressRepository: JdbcAddressRepository){
 
     fun getAllEmployee():List<Employee>{
         return  jdbcEmployeeRepository.findAll();
     }
 
     fun saveEmployee(employee: Employee){
+        employee.address?.let {
+            val addressId =jdbcAddressRepository.save(it);
+            employee.addressId = addressId
+        }
+
         jdbcEmployeeRepository.save(employee);
     }
 

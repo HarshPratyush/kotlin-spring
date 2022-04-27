@@ -20,11 +20,14 @@ import java.text.MessageFormat
 import java.time.LocalDate
 
 data class Employee(val employeeId:Int?,val firstName: String,val lastName:String,
-                    val middleName:String?,val dob:LocalDate,val contactNumber: String,val email:String){
+                    val middleName:String?,val dob:LocalDate,val contactNumber: String,
+                    val email:String,var addressId:Long?){
+
+    var address:Address?=null;
 
     companion object{
         const val TABLE_NAME = "employee";
-        const val INSERT_QUERY = "INSERT INTO  $TABLE_NAME (first_name, last_name, middle_name, dob, contact_number, email) VALUES({0}, {1}, {2}, {3}, {4}, {5});";
+        const val INSERT_QUERY = "INSERT INTO  $TABLE_NAME (first_name, last_name, middle_name, dob, contact_number, email,address_id) VALUES({0}, {1}, {2}, {3}, {4}, {5});";
     }
 
     override fun equals(other: Any?): Boolean {
@@ -39,6 +42,8 @@ data class Employee(val employeeId:Int?,val firstName: String,val lastName:Strin
         if (dob != other.dob) return false
         if (contactNumber != other.contactNumber) return false
         if (email != other.email) return false
+        if (addressId != other.addressId) return false
+
 
         return true
     }
@@ -50,16 +55,17 @@ data class Employee(val employeeId:Int?,val firstName: String,val lastName:Strin
         result = 31 * result + dob.hashCode()
         result = 31 * result + contactNumber.hashCode()
         result = 31 * result + email.hashCode()
+        result = 31 * result + (addressId?.hashCode()?:0)
         return result
     }
 
     override fun toString(): String {
-        return "Employee(firstName='$firstName', lastName='$lastName', middleName=$middleName, dob=$dob, contactNumber='$contactNumber', email='$email')"
+        return "Employee(firstName='$firstName', lastName='$lastName', middleName=$middleName, dob=$dob, contactNumber='$contactNumber', email='$email', addressId = '$addressId' )"
     }
 
     @JsonIgnore
     fun getInsertQuery():String{
         return  MessageFormat.format(INSERT_QUERY,"'${this.firstName}'","'${this.lastName}'",
-            "'${this.middleName}'","'${this.dob}'","'${this.contactNumber}'","'${this.email}'")
+            "'${this.middleName}'","'${this.dob}'","'${this.contactNumber}'","'${this.email}', ${this.addressId}")
     }
 }

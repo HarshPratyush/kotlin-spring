@@ -16,9 +16,9 @@
 
 package org.nagarro.kotlinapi.repository
 
-interface JdbcRepository<T> {
+interface JdbcRepository<T,ID> {
 
-    fun save(entity:T):Int;
+    fun save(entity:T):ID;
 
     fun findAll():List<T>;
 

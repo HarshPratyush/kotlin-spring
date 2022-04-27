@@ -24,7 +24,7 @@ import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Repository
 
 @Repository
-class JdbcEmployeeRepository(val jdbcTemplate:JdbcTemplate) : JdbcRepository<Employee>{
+class JdbcEmployeeRepository(val jdbcTemplate:JdbcTemplate) : JdbcRepository<Employee,Int>{
 
     override fun save(entity: Employee): Int {
      return   jdbcTemplate.update(entity.getInsertQuery())

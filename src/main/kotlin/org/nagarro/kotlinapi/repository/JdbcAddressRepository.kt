@@ -17,24 +17,41 @@
 package org.nagarro.kotlinapi.repository
 
 import org.nagarro.kotlinapi.model.Address
+import org.springframework.dao.EmptyResultDataAccessException
+import org.springframework.jdbc.core.DataClassRowMapper
 import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import org.springframework.jdbc.core.namedparam.SqlParameterSource
+import org.springframework.jdbc.support.GeneratedKeyHolder
+import org.springframework.jdbc.support.KeyHolder
 import org.springframework.stereotype.Repository
 
+
 @Repository
-class JdbcAddressRepository(val jdbcTemplate: JdbcTemplate) : JdbcRepository<Address> {
-    override fun save(entity: Address): Int {
-        TODO("Not yet implemented")
+class JdbcAddressRepository(val jdbcTemplate: NamedParameterJdbcTemplate) : JdbcRepository<Address,Long> {
+    override fun save(entity: Address): Long {
+        val data: SqlParameterSource = BeanPropertySqlParameterSource(entity)
+        val keyHolder: KeyHolder = GeneratedKeyHolder()
+        jdbcTemplate.update(Address.INSERT_QUERY,data,keyHolder)
+        return keyHolder.keys?.get("address_id") as Long
     }
 
     override fun save(entities: Iterable<Address>) {
-        TODO("Not yet implemented")
+        jdbcTemplate.batchUpdate(Address.INSERT_QUERY,entities.map {  BeanPropertySqlParameterSource(it)
+        }.toTypedArray())
     }
 
     override fun findAll(): List<Address> {
-        TODO("Not yet implemented")
+        return  jdbcTemplate.query("SELECT * FROM ${Address.TABLE_NAME}", DataClassRowMapper.newInstance(Address::class.java))
     }
 
     override fun findById(id: Int): Address? {
-        TODO("Not yet implemented")
+        return try {
+            val propMap:HashMap<String,Any> = HashMap();
+            propMap["address"] = id;
+            jdbcTemplate.
+            queryForObject("SELECT * FROM ${Address.TABLE_NAME} where address_id = :address",propMap,DataClassRowMapper.newInstance(Address::class.java))
+        }catch (exception: EmptyResultDataAccessException){null}
     }
 }
