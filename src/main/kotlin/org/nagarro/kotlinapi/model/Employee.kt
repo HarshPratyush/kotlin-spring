@@ -27,7 +27,7 @@ data class Employee(val employeeId:Int?,val firstName: String,val lastName:Strin
 
     companion object{
         const val TABLE_NAME = "employee";
-        const val INSERT_QUERY = "INSERT INTO  $TABLE_NAME (first_name, last_name, middle_name, dob, contact_number, email,address_id) VALUES({0}, {1}, {2}, {3}, {4}, {5});";
+        const val INSERT_QUERY = "INSERT INTO  $TABLE_NAME (first_name, last_name, middle_name, dob, contact_number, email,address_id) VALUES(:firstName, :lastName, :middleName, :dob, :contactNumber, :email,:addressId);";
     }
 
     override fun equals(other: Any?): Boolean {
@@ -61,11 +61,5 @@ data class Employee(val employeeId:Int?,val firstName: String,val lastName:Strin
 
     override fun toString(): String {
         return "Employee(firstName='$firstName', lastName='$lastName', middleName=$middleName, dob=$dob, contactNumber='$contactNumber', email='$email', addressId = '$addressId' )"
-    }
-
-    @JsonIgnore
-    fun getInsertQuery():String{
-        return  MessageFormat.format(INSERT_QUERY,"'${this.firstName}'","'${this.lastName}'",
-            "'${this.middleName}'","'${this.dob}'","'${this.contactNumber}'","'${this.email}', ${this.addressId}")
     }
 }

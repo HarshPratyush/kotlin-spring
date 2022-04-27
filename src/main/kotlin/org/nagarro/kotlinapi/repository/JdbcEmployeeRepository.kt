@@ -20,18 +20,26 @@ package org.nagarro.kotlinapi.repository
 import org.nagarro.kotlinapi.model.Employee
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.jdbc.core.DataClassRowMapper
-import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import org.springframework.jdbc.core.namedparam.SqlParameterSource
+import org.springframework.jdbc.support.GeneratedKeyHolder
+import org.springframework.jdbc.support.KeyHolder
 import org.springframework.stereotype.Repository
 
 @Repository
-class JdbcEmployeeRepository(val jdbcTemplate:JdbcTemplate) : JdbcRepository<Employee,Int>{
+class JdbcEmployeeRepository(val jdbcTemplate: NamedParameterJdbcTemplate) : JdbcRepository<Employee,Long>{
 
-    override fun save(entity: Employee): Int {
-     return   jdbcTemplate.update(entity.getInsertQuery())
+    override fun save(entity: Employee): Long {
+        val data: SqlParameterSource = BeanPropertySqlParameterSource(entity)
+        val keyHolder: KeyHolder = GeneratedKeyHolder()
+        jdbcTemplate.update(Employee.INSERT_QUERY,data,keyHolder)
+        return keyHolder.keys?.get("address_id") as Long
+
     }
 
     override fun save(entities: Iterable<Employee>) {
-        jdbcTemplate.batchUpdate(entities.map(Employee::getInsertQuery)[entities.count()])
+        jdbcTemplate.batchUpdate(Employee.INSERT_QUERY,entities.map { BeanPropertySqlParameterSource(it) }.toTypedArray())
     }
 
     override fun findAll(): List<Employee> {
@@ -40,8 +48,10 @@ class JdbcEmployeeRepository(val jdbcTemplate:JdbcTemplate) : JdbcRepository<Emp
 
     override fun findById(id: Int): Employee? {
         return try {
+            val propMap:HashMap<String,Any> = HashMap();
+            propMap["employeeId"] = id;
             jdbcTemplate.
-            queryForObject("SELECT * FROM ${Employee.TABLE_NAME} where employee_id = ?",DataClassRowMapper.newInstance(Employee::class.java),id)
+            queryForObject("SELECT * FROM ${Employee.TABLE_NAME} where employee_id = :employeeId",propMap,DataClassRowMapper.newInstance(Employee::class.java))
         }catch (exception:EmptyResultDataAccessException){null}
     }
 }
