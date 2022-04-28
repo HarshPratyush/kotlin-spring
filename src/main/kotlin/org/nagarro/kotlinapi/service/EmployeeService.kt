@@ -38,8 +38,14 @@ class EmployeeService(private val jdbcEmployeeRepository: JdbcEmployeeRepository
         jdbcEmployeeRepository.save(employee);
     }
 
-    fun saveEmployee(employee: List<Employee>){
-        jdbcEmployeeRepository.save(employee);
+    fun saveEmployee(employees: List<Employee>){
+        employees.map { employee :Employee ->
+            employee.address?.let {
+                val addressId = jdbcAddressRepository.save(it);
+                employee.addressId = addressId
+            }
+        }
+        jdbcEmployeeRepository.save(employees);
     }
 
     fun getEmployeeById(id:Int):Employee{
