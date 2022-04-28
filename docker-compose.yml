@@ -8,6 +8,9 @@ services:
     container_name: kotlin-api
     ports:
       - "8080:8080"
+    deploy:
+      mode: replicated
+      replicas: 1
     environment:
       - db_host=db
       - db_name=kotlin-api-db
@@ -27,6 +30,7 @@ services:
       - "5432:5432"
   portainer:
     image: portainer/portainer-ce
+    container_name: portainer
     ports:
       - "9000:9000"
       - "8000:8000"

@@ -18,6 +18,7 @@ package org.nagarro.kotlinapi.model
 import com.fasterxml.jackson.annotation.JsonIgnore
 import java.text.MessageFormat
 import java.time.LocalDate
+import java.time.Period
 
 data class Employee(val employeeId:Int?,val firstName: String,val lastName:String,
                     val middleName:String?,val dob:LocalDate,val contactNumber: String,
@@ -61,5 +62,11 @@ data class Employee(val employeeId:Int?,val firstName: String,val lastName:Strin
 
     override fun toString(): String {
         return "Employee(firstName='$firstName', lastName='$lastName', middleName=$middleName, dob=$dob, contactNumber='$contactNumber', email='$email', addressId = '$addressId' )"
+    }
+
+    fun getAge():String{
+        val currentDate = LocalDate.now();
+        val agePeriod:Period = dob.until(currentDate)
+        return "${agePeriod.years} Years ${agePeriod.months} Months"
     }
 }

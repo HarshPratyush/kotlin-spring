@@ -34,7 +34,7 @@ class JdbcEmployeeRepository(val jdbcTemplate: NamedParameterJdbcTemplate) : Jdb
         val data: SqlParameterSource = BeanPropertySqlParameterSource(entity)
         val keyHolder: KeyHolder = GeneratedKeyHolder()
         jdbcTemplate.update(Employee.INSERT_QUERY,data,keyHolder)
-        return keyHolder.keys?.get("address_id") as Long
+        return keyHolder.keys?.get("employee_id") as Long
 
     }
 
