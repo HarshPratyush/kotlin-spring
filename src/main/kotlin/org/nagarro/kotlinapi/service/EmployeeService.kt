@@ -17,6 +17,7 @@
 package org.nagarro.kotlinapi.service
 
 import org.nagarro.kotlinapi.exceptions.DataNotFound
+import org.nagarro.kotlinapi.model.Address
 import org.nagarro.kotlinapi.model.Employee
 import org.nagarro.kotlinapi.repository.JdbcAddressRepository
 import org.nagarro.kotlinapi.repository.JdbcEmployeeRepository
@@ -36,8 +37,8 @@ class EmployeeService(private val jdbcEmployeeRepository: JdbcEmployeeRepository
     @Transactional
     fun saveEmployee(employee: Employee){
         logger.info("Saving employee with details $employee")
-        employee.address?.let {
-            val addressId =jdbcAddressRepository.save(it);
+        employee.address?.let {address : Address ->
+            val addressId =jdbcAddressRepository.save(address);
             employee.addressId = addressId
         }
         jdbcEmployeeRepository.save(employee)
@@ -46,8 +47,8 @@ class EmployeeService(private val jdbcEmployeeRepository: JdbcEmployeeRepository
     @Transactional
     fun saveEmployee(employees: List<Employee>){
         employees.map { employee :Employee ->
-            employee.address?.let {
-                val addressId = jdbcAddressRepository.save(it);
+            employee.address?.let {address:Address ->
+                val addressId = jdbcAddressRepository.save(address);
                 employee.addressId = addressId
             }
         }

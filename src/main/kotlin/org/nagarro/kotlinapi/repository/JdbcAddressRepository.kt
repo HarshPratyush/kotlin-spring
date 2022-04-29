@@ -38,7 +38,7 @@ class JdbcAddressRepository(val jdbcTemplate: NamedParameterJdbcTemplate) : Jdbc
     }
 
     override fun save(entities: Iterable<Address>) {
-        jdbcTemplate.batchUpdate(Address.INSERT_QUERY,entities.map {  BeanPropertySqlParameterSource(it)
+        jdbcTemplate.batchUpdate(Address.INSERT_QUERY,entities.map {address:Address ->  BeanPropertySqlParameterSource(address)
         }.toTypedArray())
     }
 

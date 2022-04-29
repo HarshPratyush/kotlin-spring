@@ -39,7 +39,7 @@ class JdbcEmployeeRepository(val jdbcTemplate: NamedParameterJdbcTemplate) : Jdb
     }
 
     override fun save(entities: Iterable<Employee>) {
-        jdbcTemplate.batchUpdate(Employee.INSERT_QUERY,entities.map { BeanPropertySqlParameterSource(it) }.toTypedArray())
+        jdbcTemplate.batchUpdate(Employee.INSERT_QUERY,entities.map {employee : Employee -> BeanPropertySqlParameterSource(employee) }.toTypedArray())
     }
 
     override fun findAll(): List<Employee> {
