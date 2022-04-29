@@ -16,13 +16,32 @@
 package org.nagarro.kotlinapi
 
 import org.junit.jupiter.api.Test
+import org.nagarro.kotlinapi.model.Employee
+import org.nagarro.kotlinapi.service.EmployeeService
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.jdbc.EmbeddedDatabaseConnection
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.context.ActiveProfiles
+import java.time.LocalDate
 
-//@SpringBootTest
+@ActiveProfiles("test")
+@SpringBootTest
+@AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
 class KotlinApiApplicationTests {
 
-//	@Test
+	@Autowired
+	var employeeService: EmployeeService?=null;
+
+	@Test
 	fun contextLoads() {
+	}
+
+	@Test
+	fun  createEmployee(){
+		val employee:Employee = Employee(firstName = "Harsh", lastName = "Pratyush" ,
+			contactNumber = "7684876516", dob = LocalDate.parse("1994-06-12"), email = "harsh@gmail.com", addressId = null, middleName = null, employeeId = null)
+		employeeService!!.saveEmployee(employee);
 	}
 
 }

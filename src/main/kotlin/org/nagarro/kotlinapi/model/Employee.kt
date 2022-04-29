@@ -61,7 +61,7 @@ data class Employee(val employeeId:Int?,val firstName: String,val lastName:Strin
     }
 
     override fun toString(): String {
-        return "Employee(firstName='$firstName', lastName='$lastName', middleName=$middleName, dob=$dob, contactNumber='$contactNumber', email='$email', addressId = '$addressId' )"
+        return "Employee(firstName='$firstName', lastName='$lastName', middleName=$middleName, dob=$dob, contactNumber='$contactNumber', email='$email', addressId = '$addressId' , address = $address )"
     }
 
     fun getAge():String{

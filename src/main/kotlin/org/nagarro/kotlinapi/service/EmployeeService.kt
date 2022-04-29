@@ -20,24 +20,30 @@ import org.nagarro.kotlinapi.exceptions.DataNotFound
 import org.nagarro.kotlinapi.model.Employee
 import org.nagarro.kotlinapi.repository.JdbcAddressRepository
 import org.nagarro.kotlinapi.repository.JdbcEmployeeRepository
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class EmployeeService(private val jdbcEmployeeRepository: JdbcEmployeeRepository,private  val jdbcAddressRepository: JdbcAddressRepository){
 
+    val logger:Logger = LoggerFactory.getLogger("EmployeeService");
     fun getAllEmployee():List<Employee>{
         return  jdbcEmployeeRepository.findAll();
     }
 
+    @Transactional
     fun saveEmployee(employee: Employee){
+        logger.info("Saving employee with details $employee")
         employee.address?.let {
             val addressId =jdbcAddressRepository.save(it);
             employee.addressId = addressId
         }
-
-        jdbcEmployeeRepository.save(employee);
+        jdbcEmployeeRepository.save(employee)
     }
 
+    @Transactional
     fun saveEmployee(employees: List<Employee>){
         employees.map { employee :Employee ->
             employee.address?.let {
