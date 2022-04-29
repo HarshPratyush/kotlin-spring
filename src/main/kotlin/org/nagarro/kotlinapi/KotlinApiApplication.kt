@@ -26,16 +26,18 @@ import org.springframework.context.annotation.Bean
 
 
 @SpringBootApplication(exclude = [ SecurityAutoConfiguration::class])
-class KotlinApiApplication
+class KotlinApiApplication{
+	@Bean
+	fun flywayMigrationStrategy(): FlywayMigrationStrategy {
+		return FlywayMigrationStrategy { flyway: Flyway ->
+			flyway.repair()
+			flyway.migrate()
+		}
+	}
+}
 
 fun main(args: Array<String>) {
 	runApplication<KotlinApiApplication>(*args)
 }
 
-@Bean
-fun flywayMigrationStrategy(): FlywayMigrationStrategy {
-	return FlywayMigrationStrategy { flyway: Flyway ->
-		flyway.repair()
-		flyway.migrate()
-	}
-}
+

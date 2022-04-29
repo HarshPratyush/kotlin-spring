@@ -51,8 +51,9 @@ tasks.withType<Test> {
 license {
 	header = rootProject.file("HEADER")
 	strictCheck = false
-	mapping ("kt" , "JAVADOC_STYLE")
-	mapping("sql","DOUBLEDASHES_STYLE")
+	useDefaultMappings = true
+	mapping ("kt" , "SLASHSTAR_STYLE")
+//	mapping("sql","DOUBLEDASHES_STYLE")
 	exclude("*.yml")
 	exclude("logback.xml")
 
